@@ -1,0 +1,119 @@
+<!DOCTYPE HTML>
+<html lang="en" 
+		xmlns:th="http://www.thymeleaf.org"
+		xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+
+	<title>Employee Directory</title>
+</head>
+
+<body>
+
+<div class="container">
+
+	<h3>Employee Directory</h3>
+	<hr>
+	
+	<div>
+		User: <span sec:authentication="name"></span>
+		<br>
+		Role(s): <span sec:authentication="principal.authorities"></span>
+		<br><br>
+	</div>
+	
+
+	
+	
+	<table class="table table-bordered table-striped">
+	
+		<thead class="thead-dark">
+			<tr>
+				<th>Projectname</th>
+				<th>Projectdetails</th>
+
+				<th>Action</th>
+
+				<th>Action</th>
+			</tr>
+		</thead>
+		
+		<tbody>
+			<tr th:each="tempproject : ${projects}">
+			
+				<td th:text="${tempproject.projectname}" />	
+				<td th:text="${tempproject.projectdetails}" />
+
+				<td>
+					<div>
+						<a th:href="@{/employees/viewemployeesofproject(projectid=${tempproject.projectid})}"
+						   class="btn btn-info btn-sm" >
+							+ view employees of this project
+						</a>
+
+					</div>
+				</td>
+				<td>
+					<div>
+				<a th:href="@{/employees/addemployee(projectid=${tempproject.projectid})}"
+				   class="btn btn-danger btn-sm" >
+					+ add employee
+				</a>
+
+					</div>
+				</td>
+
+
+
+
+			</tr>
+		</tbody>		
+	</table>
+
+	
+	<!-- Add a logout button -->
+	<form action="#" th:action="@{/logout}" 
+			   method="POST">
+	
+		<input type="submit" value="Logout" class="btn btn-outline-primary mt-2" />
+	
+	</form>
+	<div th:if = "${totalPages > 0}">
+	<div class = "row col-sm-15">
+		<div class = "col-sm-2">
+			Total Rows: [[${totalItems}]]
+		</div>
+		<div class = "col-sm-1">
+					<span th:each="i: ${#numbers.sequence(1, totalPages)}">
+						<a th:if="${currentPage != i}" th:href="@{ ${i}}" class="btn btn-info">[[${i}]]</a>
+
+						<span th:unless="${currentPage != i}" >[[${i}]]</span>
+					</span>
+		</div>
+		<div class = "col-sm-1">
+			<a th:if="${currentPage < totalPages}" th:href="@{ ${currentPage + 1}}" class="btn btn-success">Next</a>
+			<span th:unless="${currentPage < totalPages}">Next</span>
+		</div>
+
+		<div class="col-sm-1">
+			<a th:if="${currentPage !=1 }" th:href="@{${currentPage - 1}}" class="btn btn-danger">Previous</a>
+			<span th:unless="${currentPage !=1}">Previous</span>
+		</div>
+	</div>
+</div>
+	<a th:href="@{/employees/list/1}">Back to Employees List</a>
+	
+</div>
+
+	
+</body>
+</html>
+
+
+
